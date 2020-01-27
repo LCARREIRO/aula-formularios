@@ -1,0 +1,74 @@
+<div>
+  <h3 class="text-center"><i class="fas fa-clipboard-list"></i> Cadastro de Contatos</h3>
+</div>
+<div class="container">
+  <div class="jumbotron">
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <div class="form-row">
+        <div class="form-group col-md-6" [ngClass]="aplicaCssErro('nome')">
+          <label for="nome">Nome</label>
+          <input type="text" class="form-control" placeholder="Nome" name="nome" [ngModel]="usuario.nome"
+            #nome="ngModel" required>
+          <!-- <div class="alert alert-danger" *ngIf="!nome.valid && nome.touched">
+            Nome é obrigatório
+          </div> -->
+
+        </div>
+        <div class="form-group col-md-6" [ngClass]="aplicaCssErro('email')">
+          <label for="email">E-mail</label>
+          <input type="email" class="form-control" placeholder="nome@email.com" name="email" required #email="ngModel"
+            [ngModel]="usuario.email">
+          <!-- <div class="alert alert-danger" *ngIf="email.invalid && email.touched">
+            E-mail é obrigatório
+          </div> -->
+        </div>
+      </div>
+      <div ngModelGroup="endereco">
+        <div class="form-group">
+          <div class="form-row">
+            <div class="form-group col-md-3" [ngClass]="aplicaCssErro('cep')">
+              <label for="cep">CEP</label>
+              <input type="text" class="form-control" name="cep" ngModel #cep
+                (blur)="consultaCEP($event.target.value, f)">
+
+            </div>
+            <div class="form-group col-md-6">
+              <label for="rua">Logradouro</label>
+              <input type="text" class="form-control" name="rua" reuqired placeholder="Logradouro" ngModel #rua="ngModel">
+            </div>
+            <div class="form-group col-md-1">
+              <label for="numero">Nº</label>
+              <input type="text" class="form-control" name="numero"  ngModel>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="complemento">Complemento</label>
+              <input type="text" class="form-control" name="complemento" ngModel #complemento="ngModel">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="bairro">Bairro</label>
+            <input type="text" class="form-control" placeholder="Bairro" name="bairro"  reuqired #bairro="ngModel" ngModel>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="cidade">Cidade</label>
+            <input type="text" class="form-control" placeholder="Cidade" name="cidade" reuqired #cidade="ngModel" ngModel>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="uf">UF</label>
+            <select class="form-control" placeholder="UF" name="uf"reuqired  #uf="ngModel" ngModel>
+              <option *ngFor="let estado of estados | async" [value]="estado.sigla">
+                {{ estado.nome }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!f.valid"><i class="fas fa-save"></i> Submit</button>
+    </form>
+  </div>
+</div>
+<div>
+  <!-- <app-form-debug [form]="f"></app-form-debug> -->
+</div>

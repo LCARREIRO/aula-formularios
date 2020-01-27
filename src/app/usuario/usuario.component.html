@@ -1,0 +1,190 @@
+<div class="text-center">
+  <h3 style="color:#c2cbd3"><i class="fa fa-user-circle"></i> Lista de Usuários</h3>
+</div>
+<div class="container">
+  <div class="jumbotron">    
+    <table class="table table-striped">
+      <thead>
+        <tr class="row">
+          <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">ID</th>
+          <th class="col-xs-7 col-sm-7 col-md-7 col-lg-7 text-center">Nome</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Detalhe</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Editar</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Excluir</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let usuario of usuarios | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let i = index"
+          class="row">
+          <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">{{ usuario.index + 1}}</td>
+          <td class="col-xs-7 col-sm-7 col-md-7 col-lg-7 text-center">{{ usuario.nome.primeiro }}
+            {{ usuario.nome.sobrenome }}</td>
+
+          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><button type="button" class="btn btn-success"
+              (click)="open(detalhe, usuario.index)"><i class="far fa-user"></i></button></td>
+              
+          <!-- <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><button type="button" class="btn btn-success"
+              [routerLink]="['/usuario', usuario.index]"><i class="far fa-user"></i></button></td> -->
+          <!-- <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><button type="button" class="btn btn-primary"
+              [routerLink]="['/usuario/editar', usuario.index]">
+            <i class="fas fa-edit"></i></button></td> -->
+
+          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><button type="button"
+              (click)="open(editar, usuario.index)" class="btn btn-primary">
+              <i class="fas fa-edit"></i></button></td>
+
+          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><button type="button" class="btn btn-danger"> <i
+            (click)="delete(usuario.index, usuario.nome.primeiro, usuario.nome.sobrenome, exclusao);"  class="fa fa-eraser"></i> </button></td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+    <p class="text-center"><strong>Usuários :</strong> {{ usuarios.length }}</p>
+    <ngb-pagination class="d-flex justify-content-center" [(page)]="page" [pageSize]="pageSize"
+      [collectionSize]="usuarios.length">
+    </ngb-pagination>
+  </div>
+</div>
+
+<ng-template #exclusao let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fa-green" id="modal-basic-title"><i class="fa fa-check-circle fa-green"></i> Sucesso</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">   
+    <p>{{ usuarioExcluido }}</p> 
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Fechar</button>
+  </div>
+</ng-template>
+
+
+<ng-template #detalhe let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"><i class="fa fa-user-circle"></i> Detalhe</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div *ngFor="let usu of usuarioDetalhe">
+        <!-- <li>Index: {{ usu.index }}</li>
+        <li>Id: {{ usu._id}}</li>
+        <li>Gide: {{ usu.guid}}</li> -->
+        <p>Nome: {{ usu.nome.primeiro }} {{ usu.nome.sobrenome }}</p>
+        <p>Endereço: {{ usu.endereco.logradouro}}, {{usu.endereco.cidade}}, {{usu.endereco.estado}}</p>
+        <p>Ativo? {{ usu.ativo }} </p>
+        <p>Empresa: {{ usu.empresa }}</p>
+        <p>E-mail: {{ usu.email }}</p>
+        <p>Telefone: {{ usu.fone }}</p>
+        <p>Sobre: {{ usu.sobre }}</p>
+        <p>Registro: {{ usu.registro }}</p>
+        <p>Fruta: {{ usu.preferencia.frutas }}</p>
+        <hr>
+        <h4> <i class="fa fa-users"></i> Amigos</h4>
+        <div *ngFor="let amigo of usu.amigos; let i = index">
+          <p> {{amigo.nome.primeiro }} {{amigo.nome.sobrenome}}</p>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Fechar</button>
+  </div>
+</ng-template>
+
+
+<ng-template #editar let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"> <i class="fas fa-edit"></i> Editar</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #formEdit="ngForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="nome">Nome</label>
+          <input type="text" class="form-control" placeholder="Nome" name="nome" #nome required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="email">E-mail</label>
+          <input type="email" class="form-control" placeholder="nome@email.com" name="email" required #email>
+
+        </div>
+      </div>
+      <div ngModelGroup="endereco">
+        <div class="form-group">
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="cep">CEP</label>
+              <input type="text" class="form-control" name="cep">
+
+            </div>
+            <div class="form-group col-md-6">
+              <label for="rua">Logradouro</label>
+              <input type="text" class="form-control" name="rua" placeholder="Logradouro">
+            </div>
+            <div class="form-group col-md-1">
+              <label for="numero">Nº</label>
+              <input type="text" class="form-control" name="numero">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="complemento">Complemento</label>
+              <input type="text" class="form-control" name="complemento">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="bairro">Bairro</label>
+            <input type="text" class="form-control" placeholder="Bairro" name="bairro" #bairro>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="cidade">Cidade</label>
+            <input type="text" class="form-control" placeholder="Cidade" name="cidade" #cidade>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="uf">UF</label>
+            <input type="text" class="form-control" placeholder="UF" name="uf" #uf>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Fechar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+
+
+
+
+<!-- <ul *ngFor="let usuario of usuarios" style="margin-top:10px" class="container">
+  <div>
+    <li ngModule name="index" #index>Index: {{ usuario.index }}</li>
+    <li>Id: {{ usuario._id}}</li>
+    <li>Gide: {{ usuario.guid}}</li>
+    <li>Nome: {{ usuario.nome.primeiro }} {{ usuario.nome.sobrenome }}</li>
+    <li>Endereço: {{ usuario.endereco.logradouro}}, {{usuario.endereco.cidade}}, {{usuario.endereco.estado}}</li>
+    <li>Ativo? {{ usuario.ativo }}</li>
+    <li>Empresa: {{ usuario.empresa }}</li>
+    <li>E-mail: {{ usuario.email }}</li>
+    <li>Telefone: {{ usuario.fone }}</li>
+    <li>Sobre: {{ usuario.sobre }}</li>
+    <li>Registro: {{ usuario.registro }}</li>
+    <li>Fruta: {{ usuario.preferencia.frutas }}</li>
+    <ul *ngFor="let amigo of usuario.amigos; let i = index">
+      <li> Amigo {{amigo.id + 1}} : {{amigo.nome.primeiro }} {{amigo.nome.sobrenome}}</li>
+    </ul>
+    <button class="btn btn-primary" (click)="obterDetalhes(index)">Detalhe</button>
+  </div>
+  </ul> -->

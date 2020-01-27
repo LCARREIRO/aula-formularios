@@ -1,0 +1,153 @@
+<div>
+  <h3 class="text-center"><i class="fas fa-clipboard-list"></i> Formulário Reativo | Angular</h3>
+</div>
+<div class="container">
+  <div class="jumbotron">
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit(detalhe)">
+      <div class="form-row">
+        <div class="form-group col-md-12" [ngClass]="aplicaCssErro('nome')">
+          <label for="nome">Nome</label>
+          <input type="text" class="form-control" placeholder="Nome" id="nome" name="nome" formControlName="nome">
+          <!-- <app-campo-control-erro [mostrarErro]="verificaValidTouched('nome')" msgErro="Nome é obrigatório.">
+          </app-campo-control-erro> -->
+        </div>
+        <div class="form-group col-md-12" [ngClass]="aplicaCssErro('email')">
+          <label for="email">E-mail</label>
+          <input type="email" class="form-control" placeholder="Email" name="email" formControlName="email">
+          <!-- <app-campo-control-erro [mostrarErro]="verificaValidTouched('email')" msgErro="Email é obrigatório.">
+          </app-campo-control-erro> -->
+        </div>
+        <div class="form-group col-md-12" [ngClass]="aplicaCssErro('confirmarEmail')">
+          <label for="confirmarEmail">Confirmar E-mail</label>
+          <input type="confirmarEmail" class="form-control" placeholder="Email" name="confirmarEmail" formControlName="confirmarEmail">
+          <!-- <app-campo-control-erro [mostrarErro]="verificaValidTouched('email')" msgErro="Email é obrigatório.">
+          </app-campo-control-erro> -->
+        </div>
+      </div>
+      <!-- <div ngModelGroup="endereco"> -->
+      <div formGroupName="endereco">
+        <div class="form-row">
+          <div class="form-group col-md-3" [ngClass]="aplicaCssErro('endereco.cep')">
+            <label for="cep">CEP</label>
+            <input type="text" class="form-control" name="cep" formControlName="cep" (blur)="ConsultaCep()">
+          </div>
+          <div class="form-group col-md-6" [ngClass]="aplicaCssErro('endereco.rua')">
+            <label for="rua">Logradouro</label>
+            <input type="text" class="form-control" name="rua" placeholder="Logradouro" formControlName="rua">
+          </div>
+          <div class="form-group col-md-1">
+            <label for="numero">Nº</label>
+            <input type="text" class="form-control" name="numero" formControlName="numero">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="complemento">Complemento</label>
+            <input type="text" class="form-control" name="complemento" formControlName="complemento">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6" [ngClass]="aplicaCssErro('endereco.bairro')">
+            <label for="bairro">Bairro</label>
+            <input type="text" class="form-control" placeholder="Bairro" formControlName="bairro">
+          </div>
+          <div class="form-group col-md-4" [ngClass]="aplicaCssErro('endereco.cidade')">
+            <label for="cidade">Cidade</label>
+            <input type="text" class="form-control" placeholder="Cidade" formControlName="cidade">
+          </div>
+          <div class="form-group col-md-2" [ngClass]="aplicaCssErro('endereco.uf')">
+            <label for="uf">UF</label>
+            <select class="form-control" id="uf" formControlName="uf">
+              <option *ngFor="let estado of estados | async" [value]="estado.sigla">
+                {{ estado.nome }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="cargo">Cargo</label>
+          <select class="form-control" formControlName="cargo" [compareWith]="compararCargos">
+            <option *ngFor="let cargo of cargos" [ngValue]="cargo">
+              {{ cargo.desc }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="tecnologia">Tecnologia</label>
+          <select multiple class="form-control" id="tecnologia" formControlName="tecnologia"
+            [compareWith]="compararTecnologias">
+            <option *ngFor="let tecnologia of tecnologias" [value]="tecnologia.desc">
+              {{ tecnologia.desc }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="newsletter">Newsletter</label>
+          <div class="row">
+            <div class="col-sm-4" *ngFor="let item of newsletterOp">
+              <label class="radio-inline">
+                <input formControlName="newsletter" type="radio" [value]="item.cod" />
+                {{ item.desc }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-3" [ngClass]="aplicaCssErro('termos')">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="termos" formControlName="termos" id="termos">
+            <label class="custom-control-label" for="termos"> Aceito os termos.</label>
+          </div>
+          <app-campo-control-erro [mostrarErro]="!formulario.get('termos').valid" msgErro="Aceite o termo.">
+            </app-campo-control-erro> 
+        </div>
+
+        <div class="form-group col-md-9" [ngClass]="aplicaCssErro('frameworks')">
+          <div id="frameworks" class="row">
+            <label for="frameworks"><strong>Frameworks :</strong> </label>
+            <div class="custom-control custom-checkbox col-sm-2" formArrayName="frameworks"
+              *ngFor="let item of formulario.get('frameworks').controls; let i = index">
+              <input type="checkbox" class="custom-control-input" name="frameworks" id="frameworks{{i}}"
+                [formControlName]="i">
+              <label class="custom-control-label" for="frameworks{{i}}">{{ frameworks[i] }}</label>
+            </div>
+          </div>
+          <app-campo-control-erro [mostrarErro]="!formulario.get('frameworks').valid" msgErro="Selecione 1 item.">
+          </app-campo-control-erro>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
+        <button type="button" class="btn btn-primary" (click)="resetForm()"> <i class="fa fa-recycle"></i>
+          Cancelar</button>
+        <button type="submit" class="btn btn-danger" (click)="setarCargo()"><i class="fas fa-save"></i> Cargo</button>
+        <button type="submit" class="btn btn-dark" (click)="setarTecnologia()"><i class="fas fa-save"></i>
+          Tecnologia</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div>
+  <app-form-debug [form]="formulario"></app-form-debug>
+</div>
+
+<ng-template #detalhe let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"><i class="fa fa-user-circle"></i> Detalhe</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Fechar</button>
+  </div>
+</ng-template>

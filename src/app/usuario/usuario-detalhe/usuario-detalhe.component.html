@@ -1,0 +1,27 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Detalhe</h3>
+        <ul *ngFor="let usu of usuario">
+          <!-- <li>Index: {{ usu.index }}</li>
+          <li>Id: {{ usu._id}}</li>
+          <li>Gide: {{ usu.guid}}</li> -->
+          <p>Nome: {{ usu.nome.primeiro }} {{ usu.nome.sobrenome }}</p>
+          <p>Endereço: {{ usu.endereco.logradouro}}, {{usu.endereco.cidade}}, {{usu.endereco.estado}}</p>
+          <p>Ativo? {{ usu.ativo }} </p>
+          <p>Empresa: {{ usu.empresa }}</p>
+          <p>E-mail: {{ usu.email }}</p>
+          <p>Telefone: {{ usu.fone }}</p>
+          <p>Sobre: {{ usu.sobre }}</p>
+          <p>Registro: {{ usu.registro }}</p>
+          <p>Fruta: {{ usu.preferencia.frutas }}</p>
+          <h4>Amigos</h4>          
+          <ul *ngFor="let amigo of usu.amigos; let i = index">
+            <p> {{amigo.nome.primeiro }} {{amigo.nome.sobrenome}}</p>
+          </ul>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

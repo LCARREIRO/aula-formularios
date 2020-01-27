@@ -1,0 +1,13 @@
+<div style="margin-top:20px" *ngIf="form">
+  <div class="text-center">
+    <h2>Detalhes do form</h2>
+  </div>
+  <div class="container">
+    <input class="form-control" readonly value="Form válido: {{ form.valid }}" />
+    <br>
+    <input class="form-control" readonly value="Form submetido: {{ form.submitted }}" />
+    <br>
+    <textarea style="height:500px; margin-top: 0px; margin-bottom: 0px;" class="form-control" readonly value="Valores: {{ form.value | json }}">
+    </textarea>
+  </div>
+</div>

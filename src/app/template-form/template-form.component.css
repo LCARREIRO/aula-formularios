@@ -1,0 +1,10 @@
+.text-center{
+    color:#c2cbd3;
+}
+ .ng-invalid.ng-touched:not(form):not(div){
+    border:1px solid red;
+}
+
+.ng-valid.ng-touched:not(form):not(div){
+    border:1px solid green;
+}
